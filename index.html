@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Цветовой селектор</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Текущий цвет</h1>
+        
+        <div class="color-display" id="colorDisplay"></div>
+        
+        <div class="input-section">
+            <h2>Выберите цвет:</h2>
+            <div class="buttin">
+            <input type="color" id="colorPicker" style="width: 100px; height: 40px; cursor: pointer;">
+        </div>
+        </div>
+
+        <div class="slider-section">
+            <div class="slider">
+            <h2>RGB</h2>
+            <div class="range-container">
+                <label>R:</label>
+                <input type="range" id="redRange" min="0" max="255">
+                <span id="redValue">0</span>
+            </div>
+            <div class="range-container">
+                <label>G:</label>
+                <input type="range" id="greenRange" min="0" max="255">
+                <span id="greenValue">0</span>
+            </div>
+            <div class="range-container">
+                <label>B:</label>
+                <input type="range" id="blueRange" min="0" max="255">
+                <span id="blueValue">0</span>
+            </div>
+            </div>
+
+
+            <div class="slider">
+            <h2>CMYK</h2>
+            <div class="range-container">
+                <label>C:</label>
+                <input type="range" id="cyanRange" min="0" max="100">
+                <span id="cyanValue">0</span>
+            </div>
+            <div class="range-container">
+                <label>M:</label>
+                <input type="range" id="magentaRange" min="0" max="100">
+                <span id="magentaValue">0</span>
+            </div>
+            <div class="range-container">
+                <label>Y:</label>
+                <input type="range" id="yellowRange" min="0" max="100">
+                <span id="yellowValue">0</span>
+            </div>
+            <div class="range-container">
+                <label>K:</label>
+                <input type="range" id="blackRange" min="0" max="100">
+                <span id="blackValue">0</span>
+            </div>
+            </div>
+
+            <div class="slider">
+            <h2>HSV</h2>
+            <div class="range-container">
+                <label>H:</label>
+                <input type="range" id="hueRange" min="0" max="360">
+                <span id="hueValue">0</span>
+            </div>
+            <div class="range-container">
+                <label>S:</label>
+                <input type="range" id="saturationRange" min="0" max="100">
+                <span id="saturationValue">0</span>
+            </div>
+            <div class="range-container">
+                <label>V:</label>
+                <input type="range" id="valueRange" min="0" max="100">
+                <span id="valueValue">0</span>
+            </div>
+            </div>
+            </div>
+
+            <div class="slider-section">
+            <div class="slider">
+
+
+            <h2>RGB (Числа)</h2>
+            <div class="input-container">
+                <label>R:</label>
+                <input type="number" id="redInput" min="0" max="255" value="0">
+            </div>
+            <div class="input-container">
+                <label>G:</label>
+                <input type="number" id="greenInput" min="0" max="255" value="0">
+            </div>
+            <div class="input-container">
+                <label>B:</label>
+                <input type="number" id="blueInput" min="0" max="255" value="0">
+            </div>
+          </div>
+
+
+          <div class="slider">
+            <h2>CMYK (Числа)</h2>
+            <div class="input-container">
+                <label>C:</label>
+                <input type="number" id="cyanInput" min="0" max="100" value="0">
+            </div>
+            <div class="input-container">
+                <label>M:</label>
+                <input type="number" id="magentaInput" min="0" max="100" value="0">
+            </div>
+            <div class="input-container">
+                <label>Y:</label>
+                <input type="number" id="yellowInput" min="0" max="100" value="0">
+            </div>
+            <div class="input-container">
+                <label>K:</label>
+                <input type="number" id="blackInput" min="0" max="100" value="0">
+            </div>
+          </div>
+
+
+          <div class="slider">
+            <h2>HSV (Числа)</h2>
+            <div class="input-container">
+                <label>H:</label>
+                <input type="number" id="hueInput" min="0" max="360" value="0">
+            </div>
+            <div class="input-container">
+                <label>S:</label>
+                <input type="number" id="saturationInput" min="0" max="100" value="0">
+            </div>
+            <div class="input-container">
+                <label>V:</label>
+                <input type="number" id="valueInput" min="0" max="100" value="0">
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
