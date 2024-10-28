@@ -85,7 +85,7 @@ class ImageProcessingApp(wx.Frame):
 
         """ Apply Niblack's method for local thresholding. """
         if self.original_image is not None:
-            window_size = 15
+            window_size = 8
             half_window = window_size // 2
             k = -0.2
                               # k определяет, какую часть границы объекта взять в качестве самого объекта. Значение k=-0.2 задает достаточно хорошее разделение объектов, если они представлены черным цветом, а значение k=+0.2, – если объекты представлены белым цветом.
