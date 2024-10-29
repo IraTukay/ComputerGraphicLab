@@ -5,8 +5,8 @@ class ImageProcessingApp(wx.Frame):
     def __init__(self, *args, **kwargs):
         super(ImageProcessingApp, self).__init__(*args, **kwargs)
 
-        self.original_image = None
-        self.processed_image = None
+        self.ishodnoe_photo = None
+        self.result_ph = None
 
         self.panel = wx.Panel(self)
         self.sizer = wx.BoxSizer(wx.VERTICAL)
@@ -14,46 +14,50 @@ class ImageProcessingApp(wx.Frame):
 
         self.image_display = wx.StaticBitmap(self.panel)  #  на нем будут изображения
         self.sizer.Add(self.image_display, 1, wx.ALIGN_CENTER | wx.ALL, 5)
-
-        self.load_button = wx.Button(self.panel, label="Load Image")
-        self.mean_filter_button = wx.Button(self.panel, label="Apply Mean Filter - anti-aliasing")  # сглаживание - Средний фильтр 
-        self.gaussian_filter_button = wx.Button(self.panel, label="Apply Gauss Filter -  anti-aliasing")  # гауссовское размытие
-        self.adaptive_threshold_gaussian_button = wx.Button(self.panel, label="Local Threshold (Niblack)")   # локальная адаптивная пороговая обработка - адаптивный порог с Гауссовым методом.
-        self.adaptive_threshold_mean_button = wx.Button(self.panel, label="Local Threshold (Bernsen)")    #  метод вычисляет порог на основе локальной статистики в окне вокруг каждого пикселя
+        labelforLoad = "Load Image"
+        self.load_button = wx.Button(self.panel, label=labelforLoad)
+        labelfor1BUTTON = "Apply Mean Filter - anti-aliasing"
+        self.m_Filt_BUTTON_ = wx.Button(self.panel, label=labelfor1BUTTON)  # сглаживание - Средний фильтр
+        labelfor2BUTTON = "Apply Mean Filter - anti-aliasing"
+        self.gaussian_filter_button = wx.Button(self.panel, label=labelfor2BUTTON)  # гауссовское размытие
+        labelfor3BUTTON = "Local Threshold (Niblack)"
+        self.niblack_button = wx.Button(self.panel, label=labelfor3BUTTON)   # локальная адаптивная пороговая обработка - адаптивный порог с Гауссовым методом.
+        labelfor4BUTTON = "Local Threshold (Bernsen)"
+        self.bernsen_Button = wx.Button(self.panel, label=labelfor4BUTTON)    #  метод вычисляет порог на основе локальной статистики в окне вокруг каждого пикселя
 
         self.sizer.Add(self.load_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-        self.sizer.Add(self.mean_filter_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.sizer.Add(self.m_Filt_BUTTON_, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         self.sizer.Add(self.gaussian_filter_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-        self.sizer.Add(self.adaptive_threshold_gaussian_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-        self.sizer.Add(self.adaptive_threshold_mean_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.sizer.Add(self.niblack_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.sizer.Add(self.bernsen_Button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
         self.panel.SetSizer(self.sizer)
 
-        self.load_button.Bind(wx.EVT_BUTTON, self.on_load_image)
-        self.mean_filter_button.Bind(wx.EVT_BUTTON, self.on_apply_mean_filter)
-        self.gaussian_filter_button.Bind(wx.EVT_BUTTON, self.on_apply_gaussian_filter)
-        self.adaptive_threshold_gaussian_button.Bind(wx.EVT_BUTTON, self.on_apply_adaptive_threshold_niblack)
-        self.adaptive_threshold_mean_button.Bind(wx.EVT_BUTTON, self.on_apply_adaptive_threshold_bernsen)
+        self.load_button.Bind(wx.EVT_BUTTON, self.toLoadImage)
+        self.m_Filt_BUTTON_.Bind(wx.EVT_BUTTON, self.Usrednenny_filter_sgl)
+        self.gaussian_filter_button.Bind(wx.EVT_BUTTON, self.gaussovskoe_razmytie)
+        self.niblack_button.Bind(wx.EVT_BUTTON, self.loc_porog_niblack)
+        self.bernsen_Button.Bind(wx.EVT_BUTTON, self.loc_porog_bernsen)
 
         self.SetTitle("Image Processing App")
-        self.SetSize((800, 600))
+        self.SetSize((801, 603))
         self.Centre()
 
 
 # ивенты для кнопочек
-    def on_load_image(self, event):
-        """ Load an image from a file. """
-        with wx.FileDialog(self, "Open Image file", wildcard="Image files (*.jpg;*.png;*.bmp)|*.jpg;*.png;*.bmp",
+    def toLoadImage(self, event):
+       
+        with wx.FileDialog(self, "Open Image file", wildcard="Image files (*.bmp;*.png;*.jpg)|*.bmp;*.png;*.jpg",
                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as file_dialog:
             if file_dialog.ShowModal() == wx.ID_OK:
-                image_path = file_dialog.GetPath()
-                self.original_image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-                self.display_image(self.original_image)
+                path = file_dialog.GetPath()
+                self.ishodnoe_photo = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+                self.display_image(self.ishodnoe_photo)
 
     def display_image(self, image, fixed_height=600):
-        """ Display the image with fixed height and centered. """
-        height, width = image.shape
-        aspect_ratio = width / height
+      
+        h, width = image.shape
+        aspect_ratio = width / h
         new_height = fixed_height
         new_width = int(aspect_ratio * new_height)
 
@@ -68,32 +72,32 @@ class ImageProcessingApp(wx.Frame):
         self.panel.Layout()
         self.sizer.Layout()
 
-    def on_apply_mean_filter(self, event):
-        """ Apply mean filter to the image. """
-        if self.original_image is not None:   # проверка на то что изображение загружено
+    def Usrednenny_filter_sgl(self, event):
+       
+        if self.ishodnoe_photo is not None:   # проверка на то что изображение загружено
             kernel = np.ones((9, 9), np.float32) / 81    # вокруг пикселя рассматриваем область 5 на 5
-            self.processed_image = cv2.filter2D(self.original_image, -1, kernel)
-            self.display_image(self.processed_image)
+            self.result_ph = cv2.filter2D(self.ishodnoe_photo, -1, kernel)
+            self.display_image(self.result_ph)
 
-    def on_apply_gaussian_filter(self, event):
-        """ Apply Gaussian filter to the image. """
-        if self.original_image is not None:
-            self.processed_image = cv2.GaussianBlur(self.original_image, (9, 9), 0)   # влияние пикселей друг на друга будет уменьшаться с расстоянием
-            self.display_image(self.processed_image)
+    def gaussovskoe_razmytie(self, event):
+     
+        if self.ishodnoe_photo is not None:
+            self.result_ph = cv2.GaussianBlur(self.ishodnoe_photo, (9, 9), 0)   # влияние пикселей друг на друга будет уменьшаться с расстоянием
+            self.display_image(self.result_ph)
 
-    def on_apply_adaptive_threshold_niblack(self, event):
+    def loc_porog_niblack(self, event):
 
-        """ Apply Niblack's method for local thresholding. """
-        if self.original_image is not None:
+ 
+        if self.ishodnoe_photo is not None:
             window_size = 8
             half_window = window_size // 2
             k = -0.2
                               # k определяет, какую часть границы объекта взять в качестве самого объекта. Значение k=-0.2 задает достаточно хорошее разделение объектов, если они представлены черным цветом, а значение k=+0.2, – если объекты представлены белым цветом.
-            self.processed_image = np.zeros_like(self.original_image)
+            self.result_ph = np.zeros_like(self.ishodnoe_photo)
 
-            for i in range(half_window, self.original_image.shape[0] - half_window):
-                for j in range(half_window, self.original_image.shape[1] - half_window):
-                    local_region = self.original_image[i-half_window:i+half_window+1, j-half_window:j+half_window+1]
+            for i in range(half_window, self.ishodnoe_photo.shape[0] - half_window):
+                for j in range(half_window, self.ishodnoe_photo.shape[1] - half_window):
+                    local_region = self.ishodnoe_photo[i-half_window:i+half_window+1, j-half_window:j+half_window+1]
 
                     # Находим среднее и стандартное отклонение в локальной области
                     local_mean = np.mean(local_region)
@@ -103,39 +107,39 @@ class ImageProcessingApp(wx.Frame):
                     threshold = local_mean + k * local_std
 
 
-                    if self.original_image[i, j] > threshold:
-                        self.processed_image[i, j] = 255  # Белый
+                    if self.ishodnoe_photo[i, j] > threshold:
+                        self.result_ph[i, j] = 255  # Белый
                     else:
-                        self.processed_image[i, j] = 0    # Черный
+                        self.result_ph[i, j] = 0    # Черный
 
 
-            self.display_image(self.processed_image)         # Подход Ниблака эффективен для изображений с сильно варьирующим освещением и шумом. объекты на фоне, учитывая их локальные особенности.
+            self.display_image(self.result_ph)         # Подход Ниблака эффективен для изображений с сильно варьирующим освещением и шумом. объекты на фоне, учитывая их локальные особенности.
 
-    def on_apply_adaptive_threshold_bernsen(self, event):
+    def loc_porog_bernsen(self, event):
     # Bernsen
-      if self.original_image is not None:
+      if self.ishodnoe_photo is not None:
         window_size = 8
-        half_window = window_size // 2
-        self.processed_image = np.zeros_like(self.original_image)
+        half_ = window_size // 2
+        self.result_ph = np.zeros_like(self.ishodnoe_photo)
 
-        float_image = self.original_image.astype(np.float32)
+        float_image = self.ishodnoe_photo.astype(np.float32)
 
-        for i in range(half_window, self.original_image.shape[0] - half_window):
-            for j in range(half_window, self.original_image.shape[1] - half_window):
-                local_region = float_image[i-half_window:i+half_window+1, j-half_window:j+half_window+1]
+        for i in range(half_, self.ishodnoe_photo.shape[0] - half_):
+            for j in range(half_, self.ishodnoe_photo.shape[1] - half_):
+                oblast = float_image[i-half_:i+half_+1, j-half_:j+half_+1]
 
-                local_min = np.min(local_region)
-                local_max = np.max(local_region)
+                minLoc = np.min(oblast)
+                maxLoc = np.max(oblast)
 
-                threshold = (local_min + local_max) / 2
+                threshold = (minLoc + maxLoc) / 2
 
                 if float_image[i, j] > threshold:
-                    self.processed_image[i, j] = 255
+                    self.result_ph[i, j] = 255
                 else:
-                    self.processed_image[i, j] = 0
+                    self.result_ph[i, j] = 0
 
 
-        self.display_image(self.processed_image)
+        self.display_image(self.result_ph)
    # Этот метод может быть более стабильным, но менее чувствительным к различиям в контрасте объектов.
 
 
