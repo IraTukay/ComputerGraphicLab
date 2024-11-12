@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Растровые алгоритмы рисования</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        #canvas {
+            border: 1px solid #000;
+            background-color: #f9f9f9;
+        }
+        .controls {
+            margin-top: 10px;
+        }
+        button {
+            margin: 5px;
+        }
+      
+        #dialog, #circleDialog {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid #ccc;
+            background-color: white;
+            padding: 20px;
+            z-index: 10;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        #overlay {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 5;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .input-row label, .input-row input {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Растровые алгоритмы</h1>
+    <div class="controls">
+        <button onclick="set_pixel()">Задать размер пикселя</button>
+        <button onclick="showDialog()">Задать отрезок</button>
+    </div>
+    
+    <div id="dialog">
+        <h3>Введите координаты отрезка:</h3>
+        
+        <div class="input-row">
+            <label for="x1">x1:</label>
+            <input type="number" id="x1" placeholder="Введите x1">
+            <label for="y1">y1:</label>
+            <input type="number" id="y1" placeholder="Введите y1">
+        </div>
+        
+        <div class="input-row">
+            <label for="x2">x2:</label>
+            <input type="number" id="x2" placeholder="Введите x2">
+            <label for="y2">y2:</label>
+            <input type="number" id="y2" placeholder="Введите y2">
+        </div>
+        
+        <button onclick="setSegment()">Подтвердить</button>
+        <button onclick="closeDialog()">Отмена</button>
+    </div>
+
+    <div id="circleDialog">
+        <h3>Введите параметры окружности:</h3>
+        <label for="centerX">X центра:</label>
+        <input type="number" id="centerX" placeholder="Введите X центра"><br>
+        <label for="centerY">Y центра:</label>
+        <input type="number" id="centerY" placeholder="Введите Y центра"><br>
+        <label for="radius">Радиус:</label>
+        <input type="number" id="radius" placeholder="Введите радиус"><br>
+        <button onclick="setCircle()">OK</button>
+        <button onclick="closeCircleDialog()">Отмена</button>
+    </div>
+    
+    <div id="overlay" onclick="closeAllDialogs()"></div>
+    
+    <canvas id="canvas" width="600" height="600"></canvas>
+    <div class="controls">
+        <button onclick="drawLineStepByStep()">Пошаговый алгоритм</button>
+        <button onclick="drawLineDDA()">Алгоритм ЦДА</button>
+        <button onclick="drawLineBresenham()">Алгоритм Брезенхема</button>
+        <button onclick="showCircleDialog()">Алгоритм Брезенхема для окружности</button>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>
